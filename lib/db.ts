@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { mkdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 
 // The repository code only needs "run a parameterised query and give me rows".
@@ -18,6 +18,7 @@ export async function migrate(db: Db): Promise<void> {
 
 export async function openPglite(dataDir?: string): Promise<Db> {
   const { PGlite } = await import("@electric-sql/pglite");
+  if (dataDir) mkdirSync(dataDir, { recursive: true });
   const pg = new PGlite(dataDir);
   const db: Db = {
     query: async (sql, params) => {
